@@ -1,6 +1,6 @@
 using QIQC
 using Test
 
-@testset "QIQC.jl" begin
-    # Write your tests here.
+@testset "measurements" begin
+	include("measurement.jl")
 end
