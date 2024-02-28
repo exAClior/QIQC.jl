@@ -43,15 +43,3 @@ function sdp_Choi_rep(ρ1::DensityMatrix, ρ2::DensityMatrix, σ1::DensityMatrix
 
 	return status, c1_sol, c2_sol, obj_value
 end
-
-function main()
-	ρ0 = density_matrix(zero_state(1))
-	ρplus = density_matrix(ghz_state(1))
-
-	ρ = rand_density_matrix(1)
-	σ = rand_density_matrix(1)
-
-	return status, c1, c2, obj_value = sdp_Choi_rep(ρ0, ρplus, ρ, σ)
-end
-
-main()
