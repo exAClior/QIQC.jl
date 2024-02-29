@@ -12,7 +12,7 @@ function sdp_measurement(ρ::AbstractMatrix, σ::AbstractMatrix; optimizer = SCS
 	model = Model(optimizer)
 	silent && set_silent(model)
 
-	M = @variable(model, [1:size(ρ, 1), 1:size(ρ, 2)] in HermitianPSDCone())
+	M = @variable(model, [1:Base.size(ρ, 1), 1:Base.size(ρ, 2)] in HermitianPSDCone())
 
 	@constraint(model, LinearAlgebra.I - M in HermitianPSDCone())
 
@@ -37,7 +37,7 @@ D(ρ,σ) = max |Tr(M(ρ - σ))|, where the maximum is taken over all POVM operat
 """
 function variational_distance(ρ::DensityMatrix, σ::DensityMatrix, stepsize::AbstractFloat)
 	loss = 1.0
-	θs = rand(3 * Yao.log2i(size(ρ, 1)))
+	θs = rand(3 * Yao.log2i(Base.size(ρ, 1)))
 	while loss >= 1e-6
 		loss = 1.0 - trace()
 		θs = θs .- stepsize .* grad

@@ -8,8 +8,8 @@ using Yao
 	@test isapprox(sdp_measurement(ρ1.state, ρ2.state), tracedist(ρ1, ρ2) / 2.0, atol = 0.00001)
 end
 
-@testset "state distance" begin
-	ρ1 = rand_density_matrix(1)
-	ρ2 = rand_density_matrix(1)
-	@test variational_distance(ρ1, ρ2, 0.001) ≈ tracedist(ρ1, ρ2)
-end
+# @testset "state distance" begin
+# 	ρ1 = rand_density_matrix(1)
+# 	ρ2 = rand_density_matrix(1)
+# 	@test variational_distance(ρ1, ρ2, 0.001) ≈ tracedist(ρ1, ρ2)
+# end

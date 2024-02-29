@@ -47,23 +47,21 @@ function sdp_Choi_rep(ρ1::AbstractMatrix, ρ2::AbstractMatrix, σ1::AbstractMat
 	A_qubits = Yao.log2i(N_A)
 	B_qubits = Yao.log2i(N_B)
 
+	# this is a CP map from A'A to A'B
 	J1 = @variable(model, [1:(N_A * N_B), 1:(N_A * N_B)] in HermitianPSDCone())
 
 	@objective(model, Min, 1.0)
 
+	# trace out the system B
 	@constraint(model, partial_tr(J1, tuple(1:A_qubits...)) .== LinearAlgebra.I)
 
-	@constraint(model, partial_tr(J1 * kron(ρ1, mat(igate(B_qubits))), tuple((A_qubits + 1):(A_qubits + B_qubits)...)) .== σ1)
+	@constraint(model, partial_tr(J1 * kron(ρ1', mat(igate(B_qubits))), tuple((A_qubits + 1):(A_qubits + B_qubits)...)) .== σ1)
 
-	@constraint(model, partial_tr(J1 * kron(ρ2, mat(igate(B_qubits))), tuple((A_qubits + 1):(A_qubits + B_qubits)...)) .== σ2)
+	@constraint(model, partial_tr(J1 * kron(ρ2', mat(igate(B_qubits))), tuple((A_qubits + 1):(A_qubits + B_qubits)...)) .== σ2)
 
 	optimize!(model)
 
-	@assert is_solved_and_feasible(model)
+	is_solved_and_feasible(model) && return JuMP.value.(J1)
 
-	solution_summary(model)
-
-	objective_value(model)
-
-	return JuMP.value.(J1)
+	return error("SDP failed to find a solution")
 end
