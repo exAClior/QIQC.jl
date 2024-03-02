@@ -9,6 +9,5 @@ include("channel.jl")
 export variational_distance, sdp_measurement
 include("measurement.jl")
 
-
 include("registers.jl")
 end
