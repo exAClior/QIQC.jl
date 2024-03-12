@@ -11,5 +11,6 @@ include("measurement.jl")
 
 include("registers.jl")
 
+export chsh_op_povm
 include("entanglement.jl")
 end

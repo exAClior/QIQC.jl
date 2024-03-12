@@ -7,7 +7,7 @@ function cabxy(a, b, x, y)
 	return (-1)^(a + b + x * y)
 end
 
-function chsh_op_state(optimizer = SCS.Optimizer, silent = true)
+function chsh_op_povm(optimizer = SCS.Optimizer, silent = true)
 	model = Model(optimizer)
 	silent && set_silent(model)
 
