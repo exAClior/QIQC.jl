@@ -44,7 +44,7 @@ function cabxy(a, b, x, y)
 	return table[a + 1, b + 1, x + 1, y + 1]
 end
 
-function chsh_op_povm(target::String, As, Bs, ρ, n, meas_n, optimizer = SCS.Optimizer, silent = true)
+function chsh_op_povm(target::String, As, Bs, ρ, n, optimizer = SCS.Optimizer, silent = true)
 	model = Model(optimizer)
 	silent && set_silent(model)
 	if isnothing(ρ)
@@ -60,6 +60,7 @@ function chsh_op_povm(target::String, As, Bs, ρ, n, meas_n, optimizer = SCS.Opt
 	v1 = rand_state(1; nlevel = n)
 
 	if isnothing(Bs)
+		Bs = Matrix{ComplexF64}[]
 		B00 = v0.state * v0.state'
 		B10 = I - B00
 		B01 = v1.state * v1.state'
