@@ -7,19 +7,19 @@ function cabxy(a, b, x, y)
 	return (-1)^(a + b + x * y)
 end
 
-function chsh_op_povm(optimizer = SCS.Optimizer, silent = true)
+function chsh_op_povm(Bs, optimizer = SCS.Optimizer, silent = true)
 	model = Model(optimizer)
 	silent && set_silent(model)
-	# ρ = density_matrix(ghz_state(2)).state, 
-	ρ = density_matrix(product_state(bit"00")).state
+	ρ = density_matrix(ghz_state(2)).state
 	v0 = rand_state(1)
 	v1 = rand_state(1)
-	B00 = v0.state * v0.state'
-	B10 = I - B00
-	B01 = v1.state * v1.state'
-	B11 = I - B01
-
-	Bs = [B00, B01, B10, B11]
+	if isnothing(Bs)
+		B00 = v0.state * v0.state'
+		B10 = I - B00
+		B01 = v1.state * v1.state'
+		B11 = I - B01
+		Bs = [B00, B01, B10, B11]
+	end
 
 	As = [@variable(model, [1:2, 1:2] in HermitianPSDCone()) for _ in 1:4]
 
@@ -34,5 +34,5 @@ function chsh_op_povm(optimizer = SCS.Optimizer, silent = true)
 
 	solution_summary(model)
 
-	return objective_value(model)
+	return objective_value(model), [value.(As[ii]) for ii in 1:4]
 end
