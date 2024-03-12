@@ -10,9 +10,8 @@ end
 function chsh_op_povm(optimizer = SCS.Optimizer, silent = true)
 	model = Model(optimizer)
 	silent && set_silent(model)
-
-	ρ = density_matrix(ghz_state(2)).state
-
+	# ρ = density_matrix(ghz_state(2)).state, 
+	ρ = density_matrix(product_state(bit"00")).state
 	v0 = rand_state(1)
 	v1 = rand_state(1)
 	B00 = v0.state * v0.state'
