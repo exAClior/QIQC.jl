@@ -3,9 +3,9 @@ using Yao
 using LinearAlgebra
 using SCS
 
-# function cabxy(a, b, x, y)
-# 	return (-1)^(a + b + x * y)
-# end
+function cabxy(a, b, x, y)
+	return (-1)^(a + b + x * y)
+end
 
 # function cabxy(a, b, x, y)
 # 	return (-1)^(a * x + b * y)
@@ -18,31 +18,6 @@ using SCS
 # function cabxy(a, b, x, y)
 # 	return exp(a)^b^x^y 
 # end
-# using Random
-# rand(16)
-# res = rand(16)
-# res
-
-function cabxy(a, b, x, y)
-	table = [0.7954447180190837,
-		0.4068562539710824,
-		0.8863966495001979,
-		0.4730542413777712,
-		0.5406657962237318,
-		0.42004910733789425,
-		0.24600566923294576,
-		0.34251279156147585,
-		0.6700891867459674,
-		0.7300059855279646,
-		0.7347221543014663,
-		0.6534003223880149,
-		0.5516352706310135,
-		0.5992477843905545,
-		0.35285383974630824,
-		0.1663026323377389]
-	table = reshape(table, (2, 2, 2, 2))
-	return table[a + 1, b + 1, x + 1, y + 1]
-end
 
 function chsh_op_povm(target::String, As, Bs, ρ, n, optimizer = SCS.Optimizer, silent = true)
 	model = Model(optimizer)
@@ -51,11 +26,11 @@ function chsh_op_povm(target::String, As, Bs, ρ, n, optimizer = SCS.Optimizer, 
 		if target == "ρ"
 			ρ = @variable(model, [1:(n^2), 1:(n^2)] in HermitianPSDCone())
 			@constraint(model, real(tr(ρ)) == 1.0)
+			# enforce PPT critesion
+			@constraint(model, partial_T(ρ) >=  0 , PSDCone())
 		end
-		# else
-		# 	ρ = density_matrix(ghz_state(2)).state
-		# end
 	end
+
 	v0 = rand_state(1; nlevel = n)
 	v1 = rand_state(1; nlevel = n)
 

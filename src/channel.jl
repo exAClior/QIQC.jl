@@ -6,6 +6,13 @@ using LinearAlgebra
 import Yao.YaoAPI.partial_tr as partial_tr
 import Yao.YaoArrayRegister.partial_tr! as partial_tr!
 
+
+function partial_T(dm::AbstractMatrix{T}; D::Int=2) where {T <: AbstractJuMPScalar}
+    dm_new = reshape(dm, (D,D,D,D))
+    permutedims(dm_new, (1,2,4,3))
+    dm_new = reshape(dm_new, (D^2, D^2))
+    return dm_new
+end
 """
 Partial assuming the system is always qubits
 """
